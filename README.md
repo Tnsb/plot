@@ -4,6 +4,8 @@ Landing page for **plot** — AI-native hosting for run clubs, supper clubs, tec
 
 The site lives in [`website/`](website/).
 
+**Live site:** [https://tnsb.github.io/plot/](https://tnsb.github.io/plot/)
+
 ## Run locally
 
 ```bash
@@ -14,4 +16,9 @@ npm run dev
 
 ## Deploy
 
-GitHub Actions builds `website/` and publishes to GitHub Pages on push to `main`.
+On push to `main`, GitHub Actions builds `website/` and publishes to the `gh-pages` branch.
+
+**One-time GitHub setup** (if the site 404s):
+
+1. **Settings → General → Repository name** → rename to `plot` (URL becomes `tnsb.github.io/plot`)
+2. **Settings → Pages → Build and deployment** → Source: **Deploy from a branch** → Branch: `gh-pages` / `/ (root)`
