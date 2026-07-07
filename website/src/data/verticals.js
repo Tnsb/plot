@@ -1,6 +1,7 @@
 export const verticals = [
-  { emoji: "🍽️", label: "supper clubs" },
   { emoji: "🏃", label: "run clubs" },
+  { emoji: "🍽️", label: "supper clubs" },
+  { emoji: "💻", label: "tech hangs" },
   { emoji: "🎲", label: "game nights" },
   { emoji: "🎧", label: "listening parties" },
   { emoji: "🎨", label: "workshops" },

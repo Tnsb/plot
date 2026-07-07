@@ -1,6 +1,5 @@
 import { FilmGrain } from "./components/FilmGrain.jsx";
 import { Background } from "./components/Background.jsx";
-import { PointerGlow } from "./components/PointerGlow.jsx";
 import { Navbar } from "./components/Navbar.jsx";
 import { Hero } from "./components/Hero.jsx";
 import { HostChecklist } from "./components/HostChecklist.jsx";
@@ -14,7 +13,6 @@ export function App() {
   return (
     <>
       <Background />
-      <PointerGlow />
       <FilmGrain />
       <a className="skip-link" href="#main">
         Skip to content

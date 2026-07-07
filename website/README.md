@@ -1,19 +1,17 @@
-# mehfil
+# plot
 
-Landing page for **mehfil** — the AI-native OS for paid intimate IRL events.
-
-The site lives in [`website/`](website/).
+Landing page for **plot** — AI-native hosting for run clubs, supper clubs, tech hangs, and intimate IRL events.
 
 ## Run locally
 
 ```bash
-cd website
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+## Build
 
-## Deploy
-
-GitHub Actions builds `website/` and publishes to GitHub Pages on push to `main`.
+```bash
+npm run build
+npm run preview
+```

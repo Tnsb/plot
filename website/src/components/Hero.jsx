@@ -1,5 +1,6 @@
 import { HeroVisual } from "./HeroVisual.jsx";
 import { launchLine } from "../data/cities.js";
+import { brand } from "../data/brand.js";
 
 export function Hero() {
   return (
@@ -8,6 +9,7 @@ export function Hero() {
         <div className="hero__copy">
           <p className="hero__eyebrow">
             <span className="pill pill--sparkle">{launchLine}</span>
+            <span className="hero__script">{brand.hook}</span>
           </p>
 
           <h1 className="hero__title">
@@ -18,7 +20,7 @@ export function Hero() {
           </h1>
 
           <p className="hero__lede">
-            Tell mehfil what you&apos;re throwing — one sentence. It builds your page, drops posters, collects
+            Tell {brand.name} what you&apos;re throwing — one lil sentence. It builds your page, drops posters, collects
             payment, spawns the group chat, and follows up after. You just show up.
           </p>
 

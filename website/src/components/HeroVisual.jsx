@@ -11,7 +11,7 @@ export function HeroVisual() {
           <span className="ui-card__time">thu · 8pm</span>
         </header>
 
-        <h3 className="ui-card__title">your event</h3>
+        <h3 className="ui-card__title">the plot</h3>
         <p className="ui-card__line">8 seats · $45 · address locked</p>
 
         <div className="ui-card__track" role="presentation">

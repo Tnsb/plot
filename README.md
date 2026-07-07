@@ -1,6 +1,6 @@
-# mehfil
+# plot
 
-Landing page for **mehfil** — the AI-native OS for paid intimate IRL events.
+Landing page for **plot** — AI-native hosting for run clubs, supper clubs, tech hangs, and intimate IRL events.
 
 The site lives in [`website/`](website/).
 
@@ -11,8 +11,6 @@ cd website
 npm install
 npm run dev
 ```
-
-Open [http://localhost:5173](http://localhost:5173).
 
 ## Deploy
 

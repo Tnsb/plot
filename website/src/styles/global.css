@@ -1,4 +1,4 @@
-/* mehfil — warm editorial paper + Gen Z pink/gold + South Asian warmth */
+/* plot — warm paper + Gen Z pink/gold */
 
 :root {
   --paper: #faf6ef;
@@ -24,18 +24,16 @@
   --peach-soft: rgba(255, 140, 105, 0.12);
   --marigold: #ff8c42;
   --grid-line: rgba(26, 22, 18, 0.1);
-  --graph-major: 48px;
-  --graph-minor: 12px;
-  --graph-line: rgba(26, 22, 18, 0.055);
-  --graph-dot: rgba(194, 24, 91, 0.16);
-  --graph-dot-soft: rgba(26, 22, 18, 0.07);
-  --graph-dash: rgba(194, 24, 91, 0.11);
+  --grid-ink: rgba(26, 22, 18, 0.22);
+  --grid-pink: rgba(194, 24, 91, 0.28);
+  --grid-pink-soft: rgba(194, 24, 91, 0.16);
   --radius: 1.25rem;
   --radius-sm: 0.625rem;
   --radius-pill: 999px;
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, sans-serif;
+  --font-accent: "Figtree", system-ui, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
   --container: min(76rem, calc(100vw - clamp(1.25rem, 5vw, 3rem) * 2));
   --header-h: 4.5rem;
   --shadow: 0 18px 50px rgba(26, 22, 18, 0.1);
@@ -78,7 +76,7 @@ html {
 body {
   margin: 0;
   min-height: 100%;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(1rem, 0.3vw + 0.92rem, 1.125rem);
   line-height: 1.6;
   color: var(--ink);
@@ -88,105 +86,118 @@ body {
 
 #root {
   min-height: 100dvh;
+  position: relative;
+  isolation: isolate;
 }
 
-/* Paper wash + graph layer */
+/* Paper wash + static 3D grid tunnel */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -5;
+  z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 70% 55% at 18% 12%, rgba(255, 200, 229, 0.38), transparent 55%),
-    radial-gradient(ellipse 55% 45% at 88% 82%, rgba(245, 166, 35, 0.12), transparent 50%);
+    radial-gradient(ellipse 70% 55% at 18% 12%, rgba(255, 200, 229, 0.28), transparent 55%),
+    radial-gradient(ellipse 55% 45% at 88% 82%, rgba(245, 166, 35, 0.08), transparent 50%),
+    linear-gradient(180deg, var(--paper) 0%, #f5efe6 48%, #efe6dc 100%);
 }
 
-.bg-graph {
+.bg-tunnel {
   position: fixed;
   inset: 0;
-  z-index: -4;
+  z-index: 1;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle, var(--graph-dot) 1.75px, transparent 1.75px),
-    linear-gradient(to right, var(--graph-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--graph-line) 1px, transparent 1px),
-    radial-gradient(circle, var(--graph-dot-soft) 0.8px, transparent 0.8px);
-  background-size:
-    var(--graph-major) var(--graph-major),
-    var(--graph-major) var(--graph-major),
-    var(--graph-major) var(--graph-major),
-    var(--graph-minor) var(--graph-minor);
-  mask-image: radial-gradient(ellipse 94% 88% at 50% 40%, black 16%, transparent 74%);
+  overflow: hidden;
+  perspective: 520px;
+  perspective-origin: 50% 36%;
 }
 
-.bg-graph__axis {
+.bg-tunnel__scene {
   position: absolute;
-  pointer-events: none;
+  inset: 0;
+  transform-style: preserve-3d;
 }
 
-.bg-graph__axis--x {
+.bg-tunnel__plane {
+  position: absolute;
+  background-repeat: repeat;
+  backface-visibility: hidden;
+}
+
+.bg-tunnel__plane--floor {
+  top: 36%;
+  left: -70%;
+  width: 240%;
+  height: 140%;
+  transform-origin: 50% 0;
+  transform: rotateX(72deg);
+  background-image:
+    linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-pink) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity: 0.5;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+}
+
+.bg-tunnel__plane--ceiling {
+  bottom: 64%;
+  left: -70%;
+  width: 240%;
+  height: 120%;
+  transform-origin: 50% 100%;
+  transform: rotateX(-68deg);
+  background-image:
+    linear-gradient(to right, var(--grid-ink) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-pink-soft) 1px, transparent 1px);
+  background-size: 52px 52px;
+  opacity: 0.32;
+  mask-image: linear-gradient(to top, transparent 0%, black 20%, black 100%);
+}
+
+.bg-tunnel__plane--left {
   top: 36%;
   left: 0;
+  width: 55%;
+  height: 65%;
+  transform-origin: 100% 0;
+  transform: rotateY(48deg);
+  background-image: linear-gradient(to right, var(--grid-pink-soft) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.28;
+  mask-image: linear-gradient(to right, black, transparent 92%);
+}
+
+.bg-tunnel__plane--right {
+  top: 36%;
   right: 0;
-  height: 1px;
-  background: repeating-linear-gradient(
-    to right,
-    transparent 0,
-    transparent 7px,
-    var(--graph-dash) 7px,
-    var(--graph-dash) 11px,
-    transparent 11px,
-    transparent 20px
-  );
-  opacity: 0.85;
+  width: 55%;
+  height: 65%;
+  transform-origin: 0 0;
+  transform: rotateY(-48deg);
+  background-image: linear-gradient(to left, var(--grid-pink-soft) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.28;
+  mask-image: linear-gradient(to left, black, transparent 92%);
 }
 
-.bg-graph__axis--y {
-  top: 0;
-  bottom: 0;
-  left: 58%;
-  width: 1px;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 7px,
-    var(--graph-dash) 7px,
-    var(--graph-dash) 11px,
-    transparent 11px,
-    transparent 20px
-  );
-  opacity: 0.85;
-}
-
-/* Animated mesh + orbs */
+/* Static mesh + orbs */
 .bg-mesh {
   position: fixed;
   inset: 0;
-  z-index: -3;
+  z-index: 2;
   pointer-events: none;
+  opacity: 0.3;
   background:
-    radial-gradient(ellipse 50% 40% at 15% 20%, rgba(255, 200, 229, 0.5), transparent 55%),
-    radial-gradient(ellipse 45% 38% at 85% 15%, rgba(245, 166, 35, 0.18), transparent 50%),
-    radial-gradient(ellipse 42% 40% at 75% 85%, rgba(124, 108, 255, 0.12), transparent 52%);
-  animation: mesh-drift 18s ease-in-out infinite alternate;
-}
-
-@keyframes mesh-drift {
-  0% {
-    transform: scale(1) translate(0, 0);
-    opacity: 0.85;
-  }
-  100% {
-    transform: scale(1.06) translate(1.5%, -1%);
-    opacity: 1;
-  }
+    radial-gradient(ellipse 50% 40% at 15% 20%, rgba(255, 200, 229, 0.45), transparent 55%),
+    radial-gradient(ellipse 45% 38% at 85% 15%, rgba(245, 166, 35, 0.14), transparent 50%),
+    radial-gradient(ellipse 42% 40% at 75% 85%, rgba(124, 108, 255, 0.1), transparent 52%);
 }
 
 .bg-orbs {
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: 3;
   pointer-events: none;
   overflow: hidden;
 }
@@ -195,7 +206,6 @@ body::before {
   position: absolute;
   border-radius: 50%;
   filter: blur(70px);
-  will-change: transform;
 }
 
 .bg-orb--pink {
@@ -204,7 +214,6 @@ body::before {
   top: -8%;
   left: -6%;
   background: rgba(255, 200, 229, 0.55);
-  animation: orb-float 14s ease-in-out infinite;
 }
 
 .bg-orb--gold {
@@ -213,8 +222,6 @@ body::before {
   bottom: 5%;
   right: -5%;
   background: rgba(245, 166, 35, 0.28);
-  animation: orb-float 17s ease-in-out infinite reverse;
-  animation-delay: -4s;
 }
 
 .bg-orb--lavender {
@@ -223,76 +230,6 @@ body::before {
   top: 42%;
   left: 42%;
   background: rgba(124, 108, 255, 0.2);
-  animation: orb-float 20s ease-in-out infinite;
-  animation-delay: -9s;
-}
-
-@keyframes orb-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(3%, 4%) scale(1.05);
-  }
-  66% {
-    transform: translate(-2%, 2%) scale(0.96);
-  }
-}
-
-.bg-sparkles {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.bg-sparkles span {
-  position: absolute;
-  font-size: 0.85rem;
-  color: var(--coral-deep);
-  opacity: 0.12;
-  animation: sparkle 5s ease-in-out infinite;
-}
-
-.bg-sparkles span:nth-child(1) {
-  top: 14%;
-  left: 10%;
-}
-.bg-sparkles span:nth-child(2) {
-  top: 38%;
-  right: 12%;
-  font-size: 1rem;
-  animation-delay: 1.4s;
-}
-.bg-sparkles span:nth-child(3) {
-  bottom: 24%;
-  left: 16%;
-  animation-delay: 2.8s;
-}
-
-@keyframes sparkle {
-  0%,
-  100% {
-    opacity: 0.08;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(1.12);
-  }
-}
-
-.pointer-glow {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(
-    680px circle at var(--pointer-x) var(--pointer-y),
-    rgba(255, 200, 229, 0.26),
-    transparent 50%
-  );
 }
 
 .film-grain {
@@ -333,6 +270,8 @@ body::before {
 }
 
 .site-shell {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
@@ -385,9 +324,10 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  font-family: var(--font-display);
   font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
   text-decoration: none;
   color: var(--ink);
 }
@@ -591,7 +531,7 @@ a:hover {
 }
 
 .hero__script {
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-size: 1.05rem;
   color: var(--ink-muted);
@@ -599,10 +539,12 @@ a:hover {
 
 .hero__title {
   margin: 0 0 1.25rem;
+  font-family: var(--font-display);
   font-size: clamp(2.75rem, 7vw, 5rem);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
 }
 
 .hero__title-line {
@@ -614,7 +556,7 @@ a:hover {
 }
 
 .hero__title em {
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
 }
@@ -747,12 +689,12 @@ a:hover {
 
 .ui-card__title {
   margin: 0 0 0.35rem;
-  font-family: var(--font-serif);
-  font-size: clamp(1.55rem, 3vw, 1.75rem);
-  font-style: italic;
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 3vw, 1.65rem);
+  font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
+  text-transform: lowercase;
 }
 
 .ui-card__line {
@@ -986,7 +928,7 @@ a:hover {
 }
 
 .moment__punch-line em {
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
   color: var(--coral-deep);
@@ -1042,15 +984,17 @@ a:hover {
 
 .section__title {
   margin: 0;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4.5vw, 3.25rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.02;
+  text-transform: lowercase;
 }
 
 .section__title-accent {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
   color: var(--ink-soft);
@@ -1216,7 +1160,7 @@ a:hover {
 
 .agents__vibe {
   margin: 0.15rem 0 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-size: 0.92rem;
   color: var(--ink-muted);
@@ -1543,22 +1487,24 @@ a:hover {
 .waitlist__title {
   position: relative;
   margin: 0 0 0.75rem;
+  font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.02;
+  text-transform: lowercase;
 }
 
 .waitlist__title-accent {
   display: block;
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
   color: var(--ink-soft);
 }
 
 .waitlist__title em {
-  font-family: var(--font-serif);
+  font-family: var(--font-accent);
   font-style: italic;
   font-weight: 400;
 }
@@ -1651,9 +1597,10 @@ a:hover {
 }
 
 .footer__logo {
+  font-family: var(--font-display);
   font-size: 1.15rem;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
 }
 
 .footer__links {

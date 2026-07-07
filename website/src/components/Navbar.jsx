@@ -1,3 +1,5 @@
+import { brand } from "../data/brand.js";
+
 export function Navbar() {
   return (
     <header className="nav">
@@ -6,7 +8,7 @@ export function Navbar() {
           <span className="nav__logo-mark" aria-hidden>
             ✦
           </span>
-          mehfil
+          {brand.name}
         </a>
         <nav className="nav__links" aria-label="Primary">
           <a href="#moment">is this me?</a>
