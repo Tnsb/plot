@@ -155,8 +155,8 @@ export function CohostVibePicker({
           disabled={pending}
           className={`pill !py-2 !px-3.5 border transition-colors ${
             selected === o.key
-              ? "bg-[color:var(--color-grape)] text-white border-transparent"
-              : "bg-white border-[color:var(--color-ink)]/15 hover:border-[color:var(--color-grape)]"
+              ? "bg-[color:var(--color-grape)] text-[#14082e] border-transparent"
+              : "bg-[color:var(--color-card)] border-[color:var(--hairline-strong)] hover:border-[color:var(--color-grape)]"
           }`}
           onClick={() => {
             const prev = selected;
@@ -200,7 +200,7 @@ export function ThemePicker({
           className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${
             selected === o.key
               ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]"
-              : "border-black/10 bg-white hover:border-black/30"
+              : "border-[color:var(--hairline-strong)] bg-[color:var(--color-card)] hover:border-[color:var(--color-ink)]/40"
           }`}
           onClick={() => {
             const prev = selected;
@@ -272,7 +272,7 @@ export function NightMechanicsPanel({
             <button
               key={t}
               disabled={pending}
-              className={`pill capitalize transition ${twist === t ? "bg-[color:var(--color-ink)] text-[color:var(--color-cream)]" : "bg-white border border-black/10"}`}
+              className={`pill capitalize transition ${twist === t ? "bg-[color:var(--color-ink)] text-[color:var(--color-cream)]" : "bg-[color:var(--color-card)] border border-[color:var(--hairline-strong)]"}`}
               onClick={() => {
                 setTwist(t);
                 patch({ twistIntensity: t });
@@ -284,7 +284,7 @@ export function NightMechanicsPanel({
           {isLive && twist !== "off" ? (
             <button
               disabled={pending}
-              className="pill bg-[color:var(--color-grape)] text-white"
+              className="pill bg-[color:var(--color-grape)] text-[#14082e]"
               onClick={() =>
                 startTransition(async () => {
                   const res = await toolAction("trigger_plot_twist", { eventId });

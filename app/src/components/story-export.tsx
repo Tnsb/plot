@@ -85,7 +85,7 @@ export function StoryExportButton({
   }
 
   return (
-    <button type="button" className="pill bg-white/80 hover:bg-white transition text-xs" onClick={exportStill}>
+    <button type="button" className="chip hover:border-[color:var(--color-ink)]/40 transition text-xs" onClick={exportStill}>
       ↗ Export story still
     </button>
   );

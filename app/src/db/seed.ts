@@ -58,13 +58,13 @@ async function main() {
 
   const maya = await mkUser("maya@table.demo", "Maya", "mayamakesmole");
   const leo = await mkUser("leo@table.demo", "Leo", "leo.shoots.film");
-  const priya = await mkUser("priya@table.demo", "Priya");
+  const tina = await mkUser("tina@table.demo", "Tina");
   const sam = await mkUser("sam@table.demo", "Sam", "samwellfed");
   const noor = await mkUser("noor@table.demo", "Noor");
 
   const dietary = [{ key: "dietary", label: "Any dietary restrictions or allergies?" }];
 
-  /* Maya's recurring show — every event is an episode */
+  /* Maya's recurring shows — every event is an episode */
   const showId = newId("shw");
   await db.insert(tables.shows).values({
     id: showId,
@@ -73,45 +73,54 @@ async function main() {
     emoji: "🍲",
     currentSeason: 1,
   });
-
-  /* upcoming, published, seats open — S1E2, with all the door mechanics on */
-  const oaxaca = newId("evt");
-  await db.insert(tables.events).values({
-    id: oaxaca,
+  const runShowId = newId("shw");
+  await db.insert(tables.shows).values({
+    id: runShowId,
     hostId: maya.id,
-    title: "Six-Course Oaxacan Night",
-    vibe: "mole from scratch, mezcal pairings, strangers welcome",
+    title: "Eastside Run Club",
+    emoji: "🏃",
+    currentSeason: 1,
+  });
+
+  /* upcoming, published, spots open — the run-club vertical as pure config:
+     free entry, $10 flake-killer deposit, waiver at booking, bib numbers */
+  const run = newId("evt");
+  await db.insert(tables.events).values({
+    id: run,
+    hostId: maya.id,
+    title: "Golden Hour 10K",
+    vibe: "easy pace, hard sunset, pancakes after",
     description:
-      "I spent a month in Oaxaca learning mole negro from a family that's made it for four generations. Six courses, communal table, ten seats.\n\nBring nothing but an appetite and one good story.",
-    priceCents: 8500,
-    capacity: 10,
-    startsAt: daysFromNow(4),
+      "Every Saturday we run the reservoir loop at golden hour — two pace groups, nobody left behind. This week is the 10K, then we take over Millie's for pancakes.\n\nBring shoes. We handle the rest.",
+    priceCents: 0,
+    depositCents: 1000,
+    capacity: 20,
+    startsAt: daysFromNow(4, 18),
     status: "published",
-    locationHint: "Silver Lake — exact address after booking",
-    locationAddress: "2114 Echo Park Ave, Los Angeles",
-    questions: dietary,
+    locationHint: "Silver Lake Reservoir — meet point after RSVP",
+    locationAddress: "Silver Lake Reservoir South Gate, Los Angeles",
+    questions: [{ key: "pace", label: "Your pace group? (chill / steady / send it)" }],
     tosAcceptedAt: new Date(),
-    showId,
+    showId: runShowId,
     season: 1,
-    episodeNumber: 2,
-    theme: "classic",
-    mysterySeat: true,
-    duoTickets: true,
-    twistIntensity: "spicy",
+    episodeNumber: 3,
+    theme: "finish_line",
+    template: "run_club",
+    twistIntensity: "chill",
   });
   const t1 = newId("tkt");
   const t2 = newId("tkt");
   await db.insert(tables.tickets).values([
-    { id: t1, eventId: oaxaca, userId: leo.id, status: "paid", paidAt: daysFromNow(-1), answers: { dietary: "no shellfish" }, persona: assignPersona(t1), bringItem: assignBringItem(t1), vibeAnswers: { energy: "kitchen", hour: "3am", role: "wildcard" }, team: teamFromVibe({ energy: "kitchen", hour: "3am", role: "wildcard" }) },
-    { id: t2, eventId: oaxaca, userId: priya.id, status: "paid", paidAt: daysFromNow(-1), answers: { dietary: "vegetarian" }, persona: assignPersona(t2), bringItem: assignBringItem(t2), vibeAnswers: { energy: "couch", hour: "3am", role: "glue" }, team: teamFromVibe({ energy: "couch", hour: "3am", role: "glue" }) },
+    { id: t1, eventId: run, userId: leo.id, status: "paid", paidAt: daysFromNow(-1), answers: { pace: "steady" }, persona: assignPersona(t1), bringItem: assignBringItem(t1), depositStatus: "held", waiverAcceptedAt: daysFromNow(-1), bibNumber: 12, vibeAnswers: { energy: "kitchen", hour: "golden", role: "wildcard" }, team: teamFromVibe({ energy: "kitchen", hour: "golden", role: "wildcard" }) },
+    { id: t2, eventId: run, userId: tina.id, status: "paid", paidAt: daysFromNow(-1), answers: { pace: "send it" }, persona: assignPersona(t2), bringItem: assignBringItem(t2), depositStatus: "held", waiverAcceptedAt: daysFromNow(-1), bibNumber: 13, vibeAnswers: { energy: "dancefloor", hour: "golden", role: "glue" }, team: teamFromVibe({ energy: "dancefloor", hour: "golden", role: "glue" }) },
   ]);
 
   /* a party chat already warming up (the Cohost is a chaotic bestie) */
   await db.insert(tables.messages).values([
-    { id: newId("msg"), eventId: oaxaca, userId: null, kind: "cohost", body: "LEO IS COMING!!! ok listen leo, you're bringing your assigned item (check your card) and this is already the best night of my life" },
-    { id: newId("msg"), eventId: oaxaca, userId: leo.id, kind: "chat", body: "hyped for the mole 🔥 what should I wear?" },
-    { id: newId("msg"), eventId: oaxaca, userId: null, kind: "cohost", body: "something you can spill mezcal on with DIGNITY. so: anything. see you saturday" },
-    { id: newId("msg"), eventId: oaxaca, userId: priya.id, kind: "chat", body: "veggie mole confirmed?? maya you're the best" },
+    { id: newId("msg"), eventId: run, userId: null, kind: "cohost", body: "BIB NUMBERS ARE OUT!!! leo you're #012, tina #013. saturday, golden hour, reservoir south gate. deposits come back the second you tap in 🏁" },
+    { id: newId("msg"), eventId: run, userId: leo.id, kind: "chat", body: "what pace are the groups running? 👀" },
+    { id: newId("msg"), eventId: run, userId: null, kind: "cohost", body: "chill = 10:30/mi and vibes. steady = 9:00. send it = you race the sunset and lose. all groups end at pancakes" },
+    { id: newId("msg"), eventId: run, userId: tina.id, kind: "chat", body: "signing up for send it, see you at the front 😤" },
   ]);
 
   /* upcoming, sold out, with waitlist */
@@ -169,13 +178,13 @@ async function main() {
   await db.insert(tables.tickets).values([
     { id: rt1, eventId: ramen, userId: leo.id, status: "paid", paidAt: daysFromNow(-3), answers: {}, persona: assignPersona(rt1), bringItem: assignBringItem(rt1), checkedInAt: ramenIn, vibeAnswers: { energy: "kitchen", hour: "3am", role: "wildcard" }, team: teamFromVibe({ energy: "kitchen", hour: "3am", role: "wildcard" }) },
     { id: rt2, eventId: ramen, userId: sam.id, status: "paid", paidAt: daysFromNow(-3), answers: {}, persona: assignPersona(rt2), bringItem: assignBringItem(rt2), checkedInAt: ramenIn, vibeAnswers: { energy: "kitchen", hour: "midnight", role: "wildcard" }, team: teamFromVibe({ energy: "kitchen", hour: "midnight", role: "wildcard" }) },
-    { id: rt3, eventId: ramen, userId: priya.id, status: "paid", paidAt: daysFromNow(-3), answers: { dietary: "vegetarian" }, persona: assignPersona(rt3), bringItem: assignBringItem(rt3), checkedInAt: ramenIn, vibeAnswers: { energy: "couch", hour: "3am", role: "glue" }, team: teamFromVibe({ energy: "couch", hour: "3am", role: "glue" }) },
+    { id: rt3, eventId: ramen, userId: tina.id, status: "paid", paidAt: daysFromNow(-3), answers: { dietary: "vegetarian" }, persona: assignPersona(rt3), bringItem: assignBringItem(rt3), checkedInAt: ramenIn, vibeAnswers: { energy: "couch", hour: "3am", role: "glue" }, team: teamFromVibe({ energy: "couch", hour: "3am", role: "glue" }) },
   ]);
 
   /* Overheard cards from ramen night (anonymous, featured at the Reveal) */
   await db.insert(tables.overheard).values([
     { id: newId("ovh"), eventId: ramen, submitterId: sam.id, quote: "I would marry this broth and my family would understand", status: "featured", createdAt: daysFromNow(-1, 21) },
-    { id: newId("ovh"), eventId: ramen, submitterId: priya.id, quote: "no because WHY does the host have a katana for the noodles", status: "featured", createdAt: daysFromNow(-1, 22) },
+    { id: newId("ovh"), eventId: ramen, submitterId: tina.id, quote: "no because WHY does the host have a katana for the noodles", status: "featured", createdAt: daysFromNow(-1, 22) },
   ]);
 
   /* the Tab from ramen night */
@@ -188,9 +197,9 @@ async function main() {
   await db.insert(tables.superlativeVotes).values([
     { id: newId("svt"), eventId: ramen, voterId: leo.id, category: "🏆 MVP of the night", votedForUserId: maya.id },
     { id: newId("svt"), eventId: ramen, voterId: sam.id, category: "🏆 MVP of the night", votedForUserId: maya.id },
-    { id: newId("svt"), eventId: ramen, voterId: priya.id, category: "🏆 MVP of the night", votedForUserId: maya.id },
+    { id: newId("svt"), eventId: ramen, voterId: tina.id, category: "🏆 MVP of the night", votedForUserId: maya.id },
     { id: newId("svt"), eventId: ramen, voterId: leo.id, category: "😂 Funniest single sentence", votedForUserId: sam.id },
-    { id: newId("svt"), eventId: ramen, voterId: priya.id, category: "😂 Funniest single sentence", votedForUserId: sam.id },
+    { id: newId("svt"), eventId: ramen, voterId: tina.id, category: "😂 Funniest single sentence", votedForUserId: sam.id },
     { id: newId("svt"), eventId: ramen, voterId: sam.id, category: "🌙 Last to leave", votedForUserId: leo.id },
     { id: newId("svt"), eventId: ramen, voterId: maya.id, category: "🌙 Last to leave", votedForUserId: leo.id },
   ]);
@@ -213,13 +222,13 @@ async function main() {
   /*
    * Taps (double-blind, intent-matched):
    * - Leo ⚡ Sam matched on Collab — the Cohost opened their chat.
-   * - Priya tapped Leo as 💘 Crush; still sealed. If Leo taps her back as
+   * - Tina tapped Leo as 💘 Crush; still sealed. If Leo taps her back as
    *   Crush during the demo, it matches live.
    */
   await db.insert(tables.connections).values([
     { id: newId("con"), eventId: ramen, fromUserId: leo.id, toUserId: sam.id, intent: "collab", createdAt: new Date(completedThisMorning.getTime() + 30 * 60 * 1000) },
     { id: newId("con"), eventId: ramen, fromUserId: sam.id, toUserId: leo.id, intent: "collab", createdAt: new Date(completedThisMorning.getTime() + 90 * 60 * 1000) },
-    { id: newId("con"), eventId: ramen, fromUserId: priya.id, toUserId: leo.id, intent: "crush", createdAt: new Date(completedThisMorning.getTime() + 60 * 60 * 1000) },
+    { id: newId("con"), eventId: ramen, fromUserId: tina.id, toUserId: leo.id, intent: "crush", createdAt: new Date(completedThisMorning.getTime() + 60 * 60 * 1000) },
   ]);
   await db.insert(tables.messages).values([
     {
@@ -244,16 +253,16 @@ async function main() {
   await db.insert(tables.feedback).values([
     { id: newId("fbk"), ticketId: rt1, eventId: ramen, userId: leo.id, rating: 5, comment: "Best broth of my life. Take my money for the next one." },
     { id: newId("fbk"), ticketId: rt2, eventId: ramen, userId: sam.id, rating: 5, comment: "Met three people I actually want to see again." },
-    { id: newId("fbk"), ticketId: rt3, eventId: ramen, userId: priya.id, rating: 3, comment: "Veggie option felt like an afterthought — the broth crew got the show." },
+    { id: newId("fbk"), ticketId: rt3, eventId: ramen, userId: tina.id, rating: 3, comment: "Veggie option felt like an afterthought — the broth crew got the show." },
   ]);
 
   /* a little activity-log + inbox realism for the host */
   await db.insert(tables.domainEvents).values([
     { id: newId("dev"), type: "event.published", actorId: maya.id, subjectType: "event", subjectId: ramen, payload: { title: "Backyard Ramen Night" } },
     { id: newId("dev"), type: "afterparty.fired", actorId: null, subjectType: "event", subjectId: ramen, payload: { title: "Backyard Ramen Night" } },
-    { id: newId("dev"), type: "event.published", actorId: maya.id, subjectType: "event", subjectId: oaxaca, payload: { title: "Six-Course Oaxacan Night" } },
-    { id: newId("dev"), type: "ticket.paid", actorId: leo.id, subjectType: "ticket", subjectId: t1, payload: { eventId: oaxaca, eventTitle: "Six-Course Oaxacan Night" } },
-    { id: newId("dev"), type: "ticket.paid", actorId: priya.id, subjectType: "ticket", subjectId: t2, payload: { eventId: oaxaca, eventTitle: "Six-Course Oaxacan Night" } },
+    { id: newId("dev"), type: "event.published", actorId: maya.id, subjectType: "event", subjectId: run, payload: { title: "Golden Hour 10K" } },
+    { id: newId("dev"), type: "ticket.paid", actorId: leo.id, subjectType: "ticket", subjectId: t1, payload: { eventId: run, eventTitle: "Golden Hour 10K" } },
+    { id: newId("dev"), type: "ticket.paid", actorId: tina.id, subjectType: "ticket", subjectId: t2, payload: { eventId: run, eventTitle: "Golden Hour 10K" } },
   ]);
   await db.insert(tables.notifications).values([
     {
@@ -272,9 +281,9 @@ async function main() {
       userId: maya.id,
       channel: "in_app",
       templateKey: "host.seat_sold",
-      title: "Seat sold — Six-Course Oaxacan Night",
-      body: "A guest just booked. Check your roster.",
-      href: `/host/events/${oaxaca}`,
+      title: "Spot claimed — Golden Hour 10K",
+      body: "A runner just RSVP'd with a deposit. Check your roster.",
+      href: `/host/events/${run}`,
       status: "sent",
       sentAt: daysFromNow(-1),
     },
@@ -282,9 +291,9 @@ async function main() {
 
   console.log("Seeded ✓");
   console.log("  Host login:  maya@table.demo  (dev code appears on the login screen)");
-  console.log("  Guest login: leo@table.demo / priya@table.demo / sam@table.demo");
-  console.log(`  Upcoming episode (S1E2, mystery+duo): /e/${oaxaca}`);
-  console.log(`  Party chat (as leo/priya/maya): /party/${oaxaca}`);
+  console.log("  Guest login: leo@table.demo / tina@table.demo / sam@table.demo");
+  console.log(`  Upcoming episode (run club, deposits+bibs): /e/${run}`);
+  console.log(`  Party chat (as leo/tina/maya): /party/${run}`);
   console.log(`  The Reveal (title card, roll, awards, tab): /drop/${ramen}`);
   console.log(`  Recap: /recap/${ramen}`);
   console.log(`  Show archive: /show/${showId}`);

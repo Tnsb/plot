@@ -44,7 +44,7 @@ export function LoginForm({ next }: { next: string }) {
             <label className="block text-sm font-semibold mb-1.5">Your name</label>
             <input
               className="field"
-              placeholder="Priya"
+              placeholder="Tina"
               value={name}
               onChange={(e) => setName(e.target.value)}
               autoComplete="name"

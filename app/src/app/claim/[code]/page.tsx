@@ -30,7 +30,7 @@ export default async function ClaimPage({ params }: { params: Promise<{ code: st
       <div className="mx-auto max-w-md px-4 py-10">
         <Cover
           seed={event.id}
-          theme={{ ...theme.palette, emoji: theme.emoji }}
+          theme={{ ...theme.palette, emoji: theme.emoji, cover: theme.cover }}
           className="h-36 rounded-[var(--radius-card)] shadow-[var(--shadow-warm-lg)]"
         />
         <div className="card p-6 -mt-8 relative mx-3 text-center space-y-3">

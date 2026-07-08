@@ -90,7 +90,7 @@ export function BookForm({
             <button
               type="button"
               onClick={() => setKind("standard")}
-              className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "standard" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-black/10 bg-white"}`}
+              className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "standard" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-[color:var(--hairline-strong)] bg-[color:var(--color-card)]"}`}
             >
               <span className="font-semibold">🎟 Standard seat</span> · {price}
             </button>
@@ -98,7 +98,7 @@ export function BookForm({
               <button
                 type="button"
                 onClick={() => setKind("mystery")}
-                className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "mystery" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-black/10 bg-white"}`}
+                className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "mystery" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-[color:var(--hairline-strong)] bg-[color:var(--color-card)]"}`}
               >
                 <span className="font-semibold">🎭 The mystery seat</span> · {mysteryPrice} — one per
                 event, 20% off, you commit before you overthink
@@ -108,7 +108,7 @@ export function BookForm({
               <button
                 type="button"
                 onClick={() => setKind("duo")}
-                className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "duo" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-black/10 bg-white"}`}
+                className={`rounded-[var(--radius-pill)] border-2 px-4 py-2.5 text-left text-sm transition ${kind === "duo" ? "border-[color:var(--color-ink)] bg-[color:var(--color-butter-soft)]" : "border-[color:var(--hairline-strong)] bg-[color:var(--color-card)]"}`}
               >
                 <span className="font-semibold">👯 Duo ticket</span> · {duoPrice} for two — your +1
                 must be new to plot
@@ -146,7 +146,7 @@ export function BookForm({
                         v[q.id] === o.key ? { ...v, [q.id]: undefined as unknown as string } : { ...v, [q.id]: o.key },
                       )
                     }
-                    className={`pill text-xs transition ${vibeAnswers[q.id] === o.key ? "bg-[color:var(--color-ink)] text-[color:var(--color-cream)]" : "bg-white"}`}
+                    className={`pill text-xs transition ${vibeAnswers[q.id] === o.key ? "bg-[color:var(--color-ink)] text-[color:var(--color-cream)]" : "bg-[color:var(--color-card-2)]"}`}
                   >
                     {o.label}
                   </button>

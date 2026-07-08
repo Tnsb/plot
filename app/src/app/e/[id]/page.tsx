@@ -57,7 +57,7 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
   const firstName = realGoing[0]?.guest.name?.split(" ")[0];
   const socialProof =
     realGoing.length >= 2 && firstName
-      ? `${firstName} and ${realGoing.length - 1} other${realGoing.length - 1 === 1 ? "" : "s"} are going`
+      ? `${firstName} and ${realGoing.length - 1} other${realGoing.length - 1 === 1 ? "" : "s"} going`
       : realGoing.length === 1 && firstName
         ? `${firstName} is going`
         : null;
@@ -72,85 +72,169 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
     ? await db.select().from(tables.shows).where(eq(tables.shows.id, event.showId))
     : [undefined];
 
+  const addressUnlocked = myTicket?.status === "paid" || isHost;
+  const pctTaken = Math.min(100, Math.round((taken / Math.max(1, event.capacity)) * 100));
+
   return (
     <Shell>
-      <div className="mx-auto max-w-2xl px-4 py-6">
+      <div className="mx-auto max-w-2xl px-4 py-5">
+        {/* cover — the episode poster */}
         <Cover
           seed={event.id}
-          theme={{ ...theme.palette, emoji: theme.emoji }}
-          className="h-44 md:h-56 rounded-[var(--radius-card)] shadow-[var(--shadow-warm-lg)]"
+          theme={{ ...theme.palette, emoji: theme.emoji, cover: theme.cover }}
+          className="rounded-[28px] border border-[color:var(--hairline)] shadow-[var(--shadow-warm-lg)] min-h-72 md:min-h-80 flex flex-col justify-end"
         >
-          <div className="absolute top-3 left-4 flex gap-2">
+          <div className="absolute top-4 left-4 right-4 flex flex-wrap gap-2">
             {event.episodeNumber ? (
-              <span className="pill bg-black/40 text-white backdrop-blur">
-                {show ? `${show.emoji} ${show.title} · ` : ""}S{event.season ?? 1}E{event.episodeNumber}
+              <span className="chip">
+                {show ? `${show.emoji} ${show.title} · ` : ""}s{event.season ?? 1}e{event.episodeNumber}
               </span>
             ) : null}
-          </div>
-          <div className="absolute bottom-3 left-4 flex flex-wrap gap-2">
-            <span className="pill bg-white/90">{formatPrice(event.priceCents)}</span>
-            <span className="pill bg-white/90">
-              {soldOut ? "Sold out" : `${seatsLeft} of ${event.capacity} seats left`}
+            <span className="chip">
+              {theme.emoji} {theme.name}
             </span>
-            <span className="pill bg-white/90">{theme.emoji} {theme.name}</span>
+            {!soldOut && seatsLeft <= 3 ? (
+              <span className="chip chip--hot">{seatsLeft} left</span>
+            ) : null}
+          </div>
+
+          {/* dress-code marquee riding the poster */}
+          <div className="marquee relative opacity-50 mb-3 text-[#f4f2ec]" aria-hidden>
+            <div>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <span key={i}>{theme.dressCode} · </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative p-5 pt-0 md:p-6 md:pt-0">
+            <p className="kicker !text-[#f4f2ec]/70">
+              {soldOut ? "sold out" : `selling · ${taken} of ${event.capacity} seats taken`}
+            </p>
+            <h1 className="hed text-4xl md:text-5xl lowercase mt-2.5 text-[#f4f2ec]">
+              {event.title}
+            </h1>
           </div>
         </Cover>
 
-        <div className="mt-5 rise-in">
-          <h1 className="font-display text-3xl md:text-4xl font-semibold leading-tight [text-wrap:balance]">
-            {event.title}
-          </h1>
+        <div className="mt-5 rise-in space-y-3">
           {event.vibe ? (
-            <p className="text-lg text-[color:var(--color-ink-soft)] mt-1.5">{event.vibe}</p>
+            <p className="font-serif italic text-xl text-[color:var(--color-ink-soft)]">
+              {event.vibe}
+            </p>
           ) : null}
 
-          <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <span className="pill bg-[color:var(--color-butter-soft)]">🗓 {formatDateTime(event.startsAt)}</span>
-            {!past ? <Countdown to={event.startsAt.toISOString()} /> : null}
-            <span className="pill bg-[color:var(--color-blush)]">
-              📍 {myTicket?.status === "paid" || isHost
-                ? event.locationAddress ?? event.locationHint ?? "TBA"
-                : event.locationHint ?? "Address revealed after booking"}
-            </span>
-            <span className="pill bg-[color:var(--color-mint-soft)]">
-              ♨ Hosted by {host?.name ?? "your host"}
-            </span>
-            {socialProof ? (
-              <span className="pill bg-[color:var(--color-butter-soft)]">🔥 {socialProof}</span>
-            ) : null}
-            {event.depositCents > 0 && event.priceCents === 0 ? (
-              <span className="pill bg-[color:var(--color-blush)]">
-                🤝 {formatPrice(event.depositCents)} hold, back at check-in
-              </span>
-            ) : null}
-            {event.template === "run_club" ? (
-              <span className="pill bg-[color:var(--color-mint-soft)]">🏃 Bib numbers + waiver at booking</span>
-            ) : null}
+          {/* meta grid */}
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="card p-3.5">
+              <p className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[color:var(--color-ink-faint)] mb-1.5">
+                when
+              </p>
+              <p className="text-sm font-bold tabular-nums">{formatDateTime(event.startsAt)}</p>
+              {!past ? (
+                <div className="mt-1.5 text-xs">
+                  <Countdown to={event.startsAt.toISOString()} />
+                </div>
+              ) : null}
+            </div>
+            <div className="card p-3.5">
+              <p className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[color:var(--color-ink-faint)] mb-1.5">
+                seat
+              </p>
+              <p className="text-sm font-bold tabular-nums">
+                {formatPrice(event.priceCents)}
+                {event.depositCents > 0 && event.priceCents === 0 ? (
+                  <span className="font-medium text-[color:var(--color-ink-soft)]">
+                    {" "}
+                    · {formatPrice(event.depositCents)} hold, back at check-in
+                  </span>
+                ) : null}
+              </p>
+            </div>
+            <div className="card p-3.5">
+              <p className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[color:var(--color-ink-faint)] mb-1.5">
+                dress
+              </p>
+              <p className="text-sm font-bold">{theme.dressCode}</p>
+            </div>
+            <div className="card p-3.5">
+              <p className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-[color:var(--color-ink-faint)] mb-1.5">
+                host
+              </p>
+              <p className="text-sm font-bold">{host?.name ?? "your host"}</p>
+              {socialProof ? (
+                <p className="text-xs text-[color:var(--color-tangerine-deep)] mt-1">
+                  🔥 {socialProof}
+                </p>
+              ) : null}
+            </div>
           </div>
 
+          {/* seats meter */}
+          <div className="card p-4">
+            <div className="flex justify-between items-baseline mb-2.5">
+              <p className="text-sm font-bold">seats</p>
+              <p className="font-mono text-xs font-bold text-[color:var(--color-tangerine)] tabular-nums">
+                {soldOut ? "sold out" : `${seatsLeft} left`}
+              </p>
+            </div>
+            <div className="meter-track">
+              <i className="meter-fill" style={{ width: `${pctTaken}%` }} />
+            </div>
+          </div>
+
+          {/* the address lock — blurred until you're in */}
+          {addressUnlocked ? (
+            <div className="card p-4 reveal-open flex items-center gap-3">
+              <span className="text-lg">📍</span>
+              <p className="text-sm font-semibold">
+                {event.locationAddress ?? event.locationHint ?? "Address coming from the host"}
+              </p>
+            </div>
+          ) : (
+            <div className="relative card p-4 overflow-hidden border-dashed !border-[color:var(--hairline-strong)]">
+              <p className="text-sm text-[color:var(--color-ink-soft)] blur-[7px] select-none" aria-hidden>
+                {event.locationHint ?? "somewhere worth showing up to"} · exact address hidden
+              </p>
+              <p className="absolute inset-0 flex items-center justify-center gap-2 font-mono text-[0.68rem] font-bold uppercase tracking-[0.1em]">
+                🔒 address unlocks after you&apos;re in
+                {event.locationHint ? (
+                  <span className="text-[color:var(--color-ink-faint)] normal-case tracking-normal">
+                    · {event.locationHint}
+                  </span>
+                ) : null}
+              </p>
+            </div>
+          )}
+
+          {event.template === "run_club" ? (
+            <p className="pill bg-[color:var(--color-mint-soft)] text-[color:var(--color-mint)]">
+              🏃 bib numbers + waiver at booking
+            </p>
+          ) : null}
+
           {inEarlyAccess ? (
-            <div className="mt-4 rounded-[var(--radius-card)] bg-[color:var(--color-ink)] text-[color:var(--color-cream)] p-4 text-sm flex flex-wrap items-center gap-2">
-              <span className="font-semibold">🔑 Early access drop.</span>
-              <span>Guests from previous episodes book first — doors open to everyone in</span>
+            <div className="card !bg-[color:var(--color-card-2)] p-4 text-sm flex flex-wrap items-center gap-2">
+              <span className="font-bold">🔑 early access drop.</span>
+              <span className="text-[color:var(--color-ink-soft)]">
+                Past guests book first — doors open to everyone in
+              </span>
               <Countdown to={event.publicAt!.toISOString()} />
             </div>
           ) : null}
 
           {event.description ? (
-            <p className="mt-5 leading-relaxed text-[color:var(--color-ink-soft)] whitespace-pre-line">
+            <p className="pt-2 leading-relaxed text-[color:var(--color-ink-soft)] whitespace-pre-line">
               {event.description}
             </p>
           ) : null}
-
-          <p className="mt-3 text-sm text-[color:var(--color-ink-faint)] italic">
-            Dress code: {theme.dressCode}
-          </p>
         </div>
 
+        {/* booking */}
         <div className="card p-5 mt-6">
           {isHost ? (
             <div className="text-center space-y-3">
-              <p className="font-semibold">This is your table.</p>
+              <p className="font-semibold">This is your episode.</p>
               <Link href={`/host/events/${event.id}`} className="btn btn-ink w-full">
                 Manage event & roster
               </Link>
@@ -168,9 +252,9 @@ export default async function EventPage({ params }: { params: Promise<{ id: stri
           ) : myTicket?.status === "paid" ? (
             <div className="reveal-open text-center space-y-3">
               <p className="text-3xl">🎟️</p>
-              <p className="font-display text-2xl font-semibold">You&apos;re in!</p>
+              <p className="hed text-2xl lowercase">you&apos;re in.</p>
               <p className="text-[color:var(--color-ink-soft)]">
-                📍 <strong>{event.locationAddress ?? "Address coming from the host"}</strong>
+                📍 <strong className="text-[color:var(--color-ink)]">{event.locationAddress ?? "Address coming from the host"}</strong>
               </p>
               <Link href={`/party/${event.id}`} className="btn btn-grape w-full">
                 💬 Open the party chat — meet your Cohost

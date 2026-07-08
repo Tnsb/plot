@@ -82,13 +82,13 @@ export default async function ManageEventPage({ params }: { params: Promise<{ id
       <div className="mx-auto max-w-2xl px-4 py-6 space-y-5">
         <Cover
           seed={event.id}
-          theme={{ ...theme.palette, emoji: theme.emoji }}
+          theme={{ ...theme.palette, emoji: theme.emoji, cover: theme.cover }}
           className="h-28 rounded-[var(--radius-card)]"
         >
           <div className="absolute bottom-3 left-4 flex gap-2">
-            <span className="pill bg-white/90 capitalize">{event.status.replace("_", " ")}</span>
+            <span className="chip capitalize">{event.status.replace("_", " ")}</span>
             {event.episodeNumber ? (
-              <span className="pill bg-white/90">S{event.season ?? 1}E{event.episodeNumber}</span>
+              <span className="chip">s{event.season ?? 1}e{event.episodeNumber}</span>
             ) : null}
           </div>
         </Cover>

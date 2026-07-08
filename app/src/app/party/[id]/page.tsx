@@ -75,7 +75,7 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
       <div className="mx-auto max-w-2xl px-4 py-6 space-y-4">
         <Cover
           seed={event.id}
-          theme={{ ...theme.palette, emoji: theme.emoji }}
+          theme={{ ...theme.palette, emoji: theme.emoji, cover: theme.cover }}
           className="h-24 rounded-[var(--radius-card)]"
         >
           <div className="absolute inset-0 flex items-center px-5">
@@ -100,7 +100,7 @@ export default async function PartyPage({ params }: { params: Promise<{ id: stri
             </p>
             <p className="text-sm text-[color:var(--color-ink-soft)] mt-1">{myTicket.persona.line}</p>
             {myTicket.bringItem ? (
-              <p className="pill bg-white/80 mt-3">🎒 You&apos;re bringing: {myTicket.bringItem}</p>
+              <p className="pill bg-[color:var(--color-card-2)] mt-3">🎒 You&apos;re bringing: {myTicket.bringItem}</p>
             ) : null}
           </div>
         ) : null}

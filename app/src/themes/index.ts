@@ -24,6 +24,8 @@ export type ThemePack = {
   tagline: string;
   /** page + cover gradient */
   palette: { from: string; to: string; accent: string };
+  /** real photo for the poster; the palette tints it */
+  cover?: string;
   filmStock: FilmStock;
   superlatives: string[];
   icebreakers: string[];
@@ -38,6 +40,7 @@ export const THEMES: Record<string, ThemePack> = {
     emoji: "🏠",
     tagline: "warm lights, good people, no agenda",
     palette: { from: "#ff7847", to: "#e5397f", accent: "#ffc94a" },
+    cover: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80",
     filmStock: {
       name: "Disposable '98",
       filter: "contrast(1.08) saturate(1.15) brightness(1.02)",
@@ -56,7 +59,7 @@ export const THEMES: Record<string, ThemePack> = {
       "Hot take round — food opinions only.",
       "Who here has the weirdest hidden talent? Prove it.",
     ],
-    dressCode: "come as you are, leave as a legend",
+    dressCode: "no dress code — just come hungry",
     playlist: {
       title: "house classic energy",
       tracks: ["Dreams — Fleetwood Mac", "Golden — Harry Styles", "Juice — Lizzo", "September — Earth, Wind & Fire", "Levitating — Dua Lipa"],
@@ -68,6 +71,7 @@ export const THEMES: Record<string, ThemePack> = {
     emoji: "📟",
     tagline: "low-rise jeans, high expectations",
     palette: { from: "#8b5cf6", to: "#06b6d4", accent: "#f0abfc" },
+    cover: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1600&q=80",
     filmStock: {
       name: "VHS-C 2001",
       filter: "contrast(1.15) saturate(1.35) hue-rotate(-8deg)",
@@ -98,6 +102,7 @@ export const THEMES: Record<string, ThemePack> = {
     emoji: "🕯️",
     tagline: "one of you did it. dinner first.",
     palette: { from: "#312e51", to: "#7f1d1d", accent: "#d4af37" },
+    cover: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1600&q=80",
     filmStock: {
       name: "Gothic Sepia",
       filter: "sepia(0.45) contrast(1.2) brightness(0.92)",
@@ -128,6 +133,7 @@ export const THEMES: Record<string, ThemePack> = {
     emoji: "🌧️",
     tagline: "rain on the window, cutting chai, no phones",
     palette: { from: "#0e7490", to: "#4d7c0f", accent: "#fbbf24" },
+    cover: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1600&q=80",
     filmStock: {
       name: "Monsoon 120",
       filter: "contrast(1.05) saturate(0.9) brightness(1.05) sepia(0.12)",
@@ -158,6 +164,7 @@ export const THEMES: Record<string, ThemePack> = {
     emoji: "🏁",
     tagline: "miles first, brunch after",
     palette: { from: "#16a34a", to: "#0ea5e9", accent: "#facc15" },
+    cover: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1600&q=80",
     filmStock: {
       name: "Finish-Line Kodak",
       filter: "contrast(1.18) saturate(1.25)",

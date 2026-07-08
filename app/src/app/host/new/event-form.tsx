@@ -48,7 +48,7 @@ export function NewEventForm() {
     <form action={submit} className="card p-6 space-y-4 rise-in">
       <div>
         <label className="block text-sm font-semibold mb-1.5">Title</label>
-        <input className="field" name="title" placeholder="Six-Course Oaxacan Night" required minLength={3} />
+        <input className="field" name="title" placeholder="Golden Hour 10K" required minLength={3} />
       </div>
       <div>
         <label className="block text-sm font-semibold mb-1.5">Vibe (one line)</label>

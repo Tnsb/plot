@@ -60,7 +60,7 @@ export function TapButtons({
             key={i.key}
             title={i.label}
             disabled={pending}
-            className="pill !px-2.5 !py-1.5 !text-xs bg-white border border-[color:var(--color-ink)]/15 hover:border-[color:var(--color-grape)] hover:bg-[color:var(--color-grape-soft)] transition-colors"
+            className="pill !px-2.5 !py-1.5 !text-xs bg-[color:var(--color-card)] border border-[color:var(--hairline-strong)] hover:border-[color:var(--color-grape)] hover:bg-[color:var(--color-grape-soft)] transition-colors"
             onClick={() =>
               startTransition(async () => {
                 setError(undefined);

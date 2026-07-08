@@ -1,66 +1,517 @@
 @import "tailwindcss";
 
 /*
-  TABLE design tokens — "warm editorial dinner party".
-  The neutral is cream, never gray. The agent gets its own color (grape).
+  plot design tokens — "the night is the canvas".
+  Near-black chrome washed with aurora glows; every episode brings its own
+  light (theme gradients). Token names are semantic roles: cream = canvas,
+  ink = foreground, card = panel. A light theme overrides the same tokens.
 */
 @theme {
-  /* palette */
-  --color-cream: #fff6ec;
-  --color-cream-deep: #fdecd8;
-  --color-card: #fffdf9;
-  --color-ink: #241a32;
-  --color-ink-soft: #5c5170;
-  --color-ink-faint: #8d8399;
-  --color-tangerine: #ff5c38;
-  --color-tangerine-deep: #e04628;
-  --color-raspberry: #e5397f;
-  --color-butter: #ffc94a;
-  --color-butter-soft: #fff1cf;
-  --color-mint: #2fbf9b;
-  --color-mint-soft: #e2f7f1;
+  /* palette — warm paper system (default), tuned to the plot brand:
+     paper ground, warm-black ink, crimson-coral accent, sun yellow */
+  --color-cream: #f9f8f3;
+  --color-cream-deep: #f0ede4;
+  --color-card: #fffefb;
+  --color-card-2: #f3f0e7;
+  --color-ink: #131210;
+  --color-ink-soft: #55524c;
+  --color-ink-faint: #8f8b83;
+  --color-tangerine: #cc1757;
+  --color-tangerine-deep: #a81145;
+  --color-raspberry: #e0357a;
+  --color-butter: #ffc300;
+  --color-butter-soft: rgba(255, 195, 0, 0.16);
+  --color-mint: #0d9b7b;
+  --color-mint-soft: rgba(13, 155, 123, 0.11);
   --color-grape: #6c4ab6;
-  --color-grape-soft: #f0eafb;
-  --color-blush: #ffe4dc;
+  --color-grape-soft: rgba(108, 74, 182, 0.12);
+  --color-blush: rgba(204, 23, 87, 0.08);
 
   /* shape */
-  --radius-card: 20px;
-  --radius-field: 14px;
+  --radius-card: 22px;
+  --radius-field: 16px;
+  --radius-pill: 999px;
 
   /* motion */
   --ease-snappy: cubic-bezier(0.2, 0.9, 0.3, 1);
 
-  /* warm shadows: tinted ink, never gray */
-  --shadow-warm: 0 2px 6px rgba(36, 26, 50, 0.06), 0 12px 32px rgba(36, 26, 50, 0.08);
-  --shadow-warm-lg: 0 4px 12px rgba(36, 26, 50, 0.08), 0 24px 56px rgba(224, 70, 40, 0.14);
+  /* depth on paper: soft ink shadow + a whisper of coral */
+  --shadow-warm: 0 2px 6px rgba(19, 18, 16, 0.05), 0 14px 34px rgba(19, 18, 16, 0.1);
+  --shadow-warm-lg: 0 4px 12px rgba(19, 18, 16, 0.08), 0 24px 56px rgba(204, 23, 87, 0.14);
+
+  /* hairline borders */
+  --hairline: rgba(19, 18, 16, 0.1);
+  --hairline-strong: rgba(19, 18, 16, 0.2);
 }
 
 /* fonts come from next/font CSS variables, so they must be inlined */
 @theme inline {
-  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
-  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-display: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --font-sans: var(--font-public), "Public Sans", system-ui, sans-serif;
+  --font-serif: var(--font-instrument), "Instrument Serif", Georgia, serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
 }
 
-body {
+/* extra non-utility vars (glass, glows, reel) — paper defaults, night below */
+:root {
+  --glass-bg: rgba(255, 254, 251, 0.75);
+  --card-sheen: rgba(255, 255, 255, 0.7);
+  --aurora-a: rgba(255, 200, 229, 0.4);
+  --aurora-b: rgba(255, 195, 0, 0.14);
+  --aurora-c: rgba(224, 53, 122, 0.1);
+  --grape-contrast: #ffffff;
+  --beam: rgba(255, 195, 0, 0.13);
+  --beam-hot: rgba(244, 169, 0, 0.22);
+  --dust: rgba(168, 17, 69, 0.5);
+  --sprocket: rgba(19, 18, 16, 0.12);
+  --mark-stroke: rgba(19, 18, 16, 0.1);
+  --spot: rgba(204, 23, 87, 0.07);
+  --blob-a: rgba(255, 200, 229, 0.85);
+  --blob-b: rgba(255, 195, 0, 0.4);
+  --blob-c: rgba(124, 108, 255, 0.3);
+  --grid-line: rgba(19, 18, 16, 0.09);
+  --grid-ink-line: rgba(19, 18, 16, 0.2);
+  --grid-pink-line: rgba(204, 23, 87, 0.3);
+}
+
+html {
   background: var(--color-cream);
+  color-scheme: light;
+}
+
+/* ---------- night theme: warm black, same hot accents, brighter for contrast */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-cream: #141310;
+  --color-cream-deep: #1b1916;
+  --color-card: #1d1b18;
+  --color-card-2: #262320;
+  --color-ink: #f9f8f3;
+  --color-ink-soft: #b5b1a8;
+  --color-ink-faint: #7a766d;
+  --color-tangerine: #ff4f8b;
+  --color-tangerine-deep: #ff7aa8;
+  --color-raspberry: #e0357a;
+  --color-butter: #ffc300;
+  --color-butter-soft: rgba(255, 195, 0, 0.13);
+  --color-mint: #3ecfa8;
+  --color-mint-soft: rgba(62, 207, 168, 0.12);
+  --color-grape: #9d7bff;
+  --color-grape-soft: rgba(157, 123, 255, 0.15);
+  --color-blush: rgba(255, 79, 139, 0.13);
+  --shadow-warm: 0 2px 8px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-warm-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 32px 80px rgba(255, 79, 139, 0.12);
+  --hairline: rgba(249, 248, 243, 0.1);
+  --hairline-strong: rgba(249, 248, 243, 0.2);
+  --glass-bg: rgba(29, 27, 24, 0.72);
+  --card-sheen: rgba(255, 255, 255, 0.05);
+  --aurora-a: rgba(255, 79, 139, 0.12);
+  --aurora-b: rgba(157, 123, 255, 0.1);
+  --aurora-c: rgba(255, 195, 0, 0.06);
+  --grape-contrast: #14082e;
+  --beam: rgba(255, 236, 214, 0.1);
+  --beam-hot: rgba(255, 220, 190, 0.18);
+  --dust: rgba(255, 240, 220, 0.85);
+  --sprocket: rgba(249, 248, 243, 0.1);
+  --mark-stroke: rgba(249, 248, 243, 0.08);
+  --spot: rgba(255, 236, 214, 0.07);
+  --blob-a: rgba(255, 79, 139, 0.22);
+  --blob-b: rgba(255, 195, 0, 0.12);
+  --blob-c: rgba(157, 123, 255, 0.2);
+  --grid-line: rgba(249, 248, 243, 0.06);
+  --grid-ink-line: rgba(249, 248, 243, 0.13);
+  --grid-pink-line: rgba(255, 79, 139, 0.3);
+}
+
+/* NOTE: the canvas color lives on <html> only. A body background would
+   paint OVER the fixed z-index:-1 backdrop (.reel) and hide it entirely. */
+body {
   color: var(--color-ink);
-  font-family: var(--font-inter), "Inter", system-ui, sans-serif;
+  font-family: var(--font-public), "Public Sans", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-::selection {
+/* aurora wash — the partiful glow, kept quiet */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 38% at 18% -4%, var(--aurora-a), transparent 62%),
+    radial-gradient(ellipse 48% 36% at 92% 30%, var(--aurora-b), transparent 60%),
+    radial-gradient(ellipse 60% 42% at 40% 108%, var(--aurora-c), transparent 60%);
+}
+
+/* ---------- the projector room ---------- */
+/* the app IS the film: beam + dust + sprockets + a ghosted episode mark */
+/* z-index 0 (not -1!) — negative z paints behind ancestor backgrounds and
+   gets swallowed. Page content rides above it in a z-10 wrapper (layout.tsx). */
+.reel {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* the projector's lamp follows your cursor — a soft spotlight on the room.
+   --mx/--my are written by the Backdrop client script (default center-top). */
+.reel__spot {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    36rem 36rem at var(--mx, 50%) var(--my, 12%),
+    var(--spot),
+    transparent 60%
+  );
+  transition: background-position 120ms linear;
+}
+
+/* graph-paper grid — the plot, literally. every cell a scene */
+.reel__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-pink-line) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, var(--grid-pink-line) 1.5px, transparent 1.5px);
+  background-size:
+    44px 44px,
+    44px 44px,
+    220px 220px,
+    220px 220px;
+  mask-image: linear-gradient(to bottom, black 0%, black 40%, rgba(0, 0, 0, 0.25) 70%, transparent 100%);
+}
+
+/* the 3D grid floor — the night rushes toward you */
+.reel__scene {
+  position: absolute;
+  inset: 0;
+  perspective: 520px;
+  perspective-origin: 50% 32%;
+}
+.reel__floor {
+  position: absolute;
+  top: 42%;
+  left: -70%;
+  width: 240%;
+  height: 160%;
+  transform-origin: 50% 0;
+  transform: rotateX(72deg);
+  background-image:
+    linear-gradient(to right, var(--grid-ink-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-pink-line) 2px, transparent 2px);
+  background-size: 52px 52px;
+  opacity: 0.65;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 22%, black 100%);
+  animation: floor-run 2.8s linear infinite;
+}
+@keyframes floor-run {
+  from { background-position: 0 0, 0 0; }
+  to { background-position: 0 0, 0 52px; }
+}
+
+/* lava orbs — big color fields drifting behind everything */
+.reel__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  animation: blob-drift 21s ease-in-out infinite alternate;
+}
+.reel__blob--a {
+  width: 58vw;
+  height: 58vw;
+  max-width: 48rem;
+  max-height: 48rem;
+  top: -14%;
+  left: -10%;
+  background: radial-gradient(circle, var(--blob-a), transparent 66%);
+}
+.reel__blob--b {
+  width: 46vw;
+  height: 46vw;
+  max-width: 38rem;
+  max-height: 38rem;
+  bottom: 4%;
+  right: -10%;
+  background: radial-gradient(circle, var(--blob-b), transparent 66%);
+  animation-delay: -10s;
+  animation-duration: 27s;
+}
+.reel__blob--c {
+  width: 34vw;
+  height: 34vw;
+  max-width: 28rem;
+  max-height: 28rem;
+  top: 38%;
+  left: 40%;
+  background: radial-gradient(circle, var(--blob-c), transparent 66%);
+  animation-delay: -16s;
+  animation-duration: 33s;
+}
+@keyframes blob-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vw, 4vh) scale(1.15); }
+  100% { transform: translate(-3vw, 8vh) scale(0.94); }
+}
+
+/* projector beam from the top — flickers like a running projector */
+.reel__beam {
+  position: absolute;
+  top: -12vh;
+  left: 50%;
+  width: 160vw;
+  height: 130vh;
+  transform: translateX(-50%);
+  background: conic-gradient(
+    from 180deg at 50% 0%,
+    transparent 38%,
+    var(--beam) 44%,
+    var(--beam-hot) 50%,
+    var(--beam) 56%,
+    transparent 62%
+  );
+  filter: blur(10px);
+  animation: beam-flicker 5.5s steps(12, end) infinite;
+}
+@keyframes beam-flicker {
+  0%, 100% { opacity: 1; }
+  8% { opacity: 0.82; }
+  13% { opacity: 0.96; }
+  31% { opacity: 0.88; }
+  36% { opacity: 1; }
+  58% { opacity: 0.9; }
+  63% { opacity: 0.98; }
+  84% { opacity: 0.85; }
+}
+
+/* dust motes drifting up through the beam */
+.reel__dust {
+  position: absolute;
+  top: 0;
+  bottom: -10vh;
+  left: 30vw;
+  right: 30vw;
+  background-image:
+    radial-gradient(2px 2px at 22% 18%, var(--dust), transparent 100%),
+    radial-gradient(1.5px 1.5px at 64% 42%, var(--dust), transparent 100%),
+    radial-gradient(2px 2px at 41% 68%, var(--dust), transparent 100%),
+    radial-gradient(1.5px 1.5px at 80% 82%, var(--dust), transparent 100%),
+    radial-gradient(1.5px 1.5px at 12% 88%, var(--dust), transparent 100%),
+    radial-gradient(2px 2px at 52% 30%, var(--dust), transparent 100%),
+    radial-gradient(1.5px 1.5px at 33% 52%, var(--dust), transparent 100%);
+  background-size: 100% 100vh;
+  opacity: 0.8;
+  animation: dust-rise 26s linear infinite;
+  mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+.reel__dust--b {
+  left: 36vw;
+  right: 24vw;
+  opacity: 0.3;
+  animation-duration: 38s;
+  animation-delay: -14s;
+  transform: scale(1.4);
+}
+@keyframes dust-rise {
+  from { background-position: 0 100vh; }
+  to { background-position: 0 0; }
+}
+
+/* sprocket holes — every screen is a frame on the reel, slowly advancing */
+.reel__sprockets {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12px;
+  background-image: radial-gradient(3px 4.5px at 50% 50%, var(--sprocket) 98%, transparent);
+  background-size: 12px 26px;
+  animation: film-advance 7s linear infinite;
+}
+.reel__sprockets--l { left: 6px; }
+.reel__sprockets--r { right: 6px; }
+@keyframes film-advance {
+  from { background-position: 0 0; }
+  to { background-position: 0 -26px; }
+}
+
+/* ghosted episode mark — the season stamp on the frame */
+.reel__mark {
+  position: absolute;
+  bottom: -0.18em;
+  right: -0.04em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(9rem, 26vw, 20rem);
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--mark-stroke);
+  transform: rotate(-3deg);
+  user-select: none;
+}
+
+/* ---------- word cycle (hero) ---------- */
+.word-cycle {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.word-cycle__ghost {
+  visibility: hidden;
+  white-space: nowrap;
+}
+.word-cycle__word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  animation: word-in 480ms var(--ease-snappy) both;
+}
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(0.45em); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* ---------- story bar — scroll progress like a story timer ---------- */
+.story-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 60;
+  pointer-events: none;
+}
+.story-progress__fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--color-tangerine), var(--color-raspberry), var(--color-butter));
+  box-shadow: 0 0 10px rgba(204, 23, 87, 0.45);
+}
+
+/* ---------- sticker chip — slapped on, slightly crooked ---------- */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.75rem;
+  border-radius: 999px;
+  background: var(--color-tangerine);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  transform: rotate(-3deg);
+}
+.sticker--butter {
   background: var(--color-butter);
-  color: var(--color-ink);
+  color: #221703;
+  transform: rotate(2.5deg);
+}
+
+/* film grain over everything — the app is shot on stock */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: var(--color-tangerine);
+  color: white;
+}
+
+/* ---- typography voice ---- */
+
+/* display headlines: tight, heavy, lowercase — with serif-italic accents via <em> */
+.hed {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+.hed em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* a word set alight — for the one headline per screen that earns it.
+   inline-block + padding keeps italic overhangs inside the clipped area */
+.hed-glow {
+  display: inline-block;
+  padding: 0.05em 0.14em 0.08em 0.04em;
+  margin: -0.05em -0.06em -0.08em -0.04em;
+  background: linear-gradient(100deg, var(--color-tangerine), var(--color-raspberry) 55%, var(--color-butter));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* mono data label with a live signal dot */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+.kicker::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-tangerine);
+  box-shadow: 0 0 8px var(--color-tangerine);
+  animation: live-dot 2.2s ease-in-out infinite;
+}
+@keyframes live-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* floating sparkle accents — sprinkle, don't pour */
+.sparkle {
+  display: inline-block;
+  color: var(--color-butter);
+  text-shadow: 0 0 12px rgba(255, 201, 74, 0.6);
+  animation: sparkle-float 4.5s ease-in-out infinite;
+}
+.sparkle:nth-child(even) {
+  animation-delay: -2.2s;
+}
+@keyframes sparkle-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.85; }
+  50% { transform: translateY(-6px) rotate(14deg); opacity: 1; }
 }
 
 /* ---- reusable primitives ---- */
 
 .hero-gradient {
-  background: linear-gradient(120deg, #e5397f, #ff5c38 52%, #ffc94a);
+  background: linear-gradient(120deg, #e5397f, #ff2d55 52%, #ff8a5c);
 }
 
 .hero-gradient-animated {
-  background: linear-gradient(120deg, #e5397f, #ff5c38 40%, #ffc94a 70%, #e5397f);
+  background: linear-gradient(120deg, #e5397f, #ff2d55 40%, #ff8a5c 70%, #e5397f);
   background-size: 240% 240%;
   animation: gradient-drift 14s ease infinite;
 }
@@ -68,6 +519,13 @@ body {
 @keyframes gradient-drift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+/* glass chrome: tab bar, sticky bars, floating chips */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid var(--hairline);
 }
 
 .btn {
@@ -79,8 +537,10 @@ body {
   font-weight: 600;
   padding: 0.7rem 1.4rem;
   font-size: 0.95rem;
+  letter-spacing: -0.01em;
   transition: transform 180ms var(--ease-snappy), box-shadow 180ms var(--ease-snappy),
-    background-color 180ms var(--ease-snappy), opacity 180ms var(--ease-snappy);
+    background-color 180ms var(--ease-snappy), opacity 180ms var(--ease-snappy),
+    filter 180ms var(--ease-snappy);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -92,19 +552,27 @@ body {
   cursor: not-allowed;
 }
 
+/* primary: hot gradient with a breathing glow */
 .btn-primary {
-  background: var(--color-tangerine);
+  background: linear-gradient(115deg, var(--color-raspberry), var(--color-tangerine) 72%);
   color: white;
-  box-shadow: 0 6px 18px rgba(224, 70, 40, 0.35);
+  box-shadow: 0 8px 26px rgba(204, 23, 87, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  animation: btn-breathe 3s ease-in-out infinite;
 }
 .btn-primary:hover {
-  background: var(--color-tangerine-deep);
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
+@keyframes btn-breathe {
+  0%, 100% { box-shadow: 0 8px 22px rgba(204, 23, 87, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+  50% { box-shadow: 0 8px 32px rgba(204, 23, 87, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+}
 
+/* ink button inverts against the canvas */
 .btn-ink {
   background: var(--color-ink);
   color: var(--color-cream);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 .btn-ink:hover {
   opacity: 0.9;
@@ -114,7 +582,7 @@ body {
 .btn-ghost {
   background: transparent;
   color: var(--color-ink);
-  border: 1.5px solid rgba(36, 26, 50, 0.18);
+  border: 1.5px solid var(--hairline-strong);
 }
 .btn-ghost:hover {
   border-color: var(--color-ink);
@@ -122,26 +590,27 @@ body {
 }
 
 .btn-grape {
-  background: var(--color-grape);
-  color: white;
-  box-shadow: 0 6px 18px rgba(108, 74, 182, 0.35);
+  background: linear-gradient(115deg, #7c5cf6, var(--color-grape));
+  color: var(--grape-contrast);
+  box-shadow: 0 8px 26px rgba(157, 123, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .btn-grape:hover {
-  opacity: 0.92;
+  filter: brightness(1.06);
   transform: translateY(-1px);
 }
 
+/* cards catch the light on their top edge */
 .card {
   background: var(--color-card);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-warm);
-  border: 1px solid rgba(36, 26, 50, 0.05);
+  border: 1px solid var(--hairline);
+  box-shadow: inset 0 1px 0 var(--card-sheen), 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .field {
   width: 100%;
-  background: white;
-  border: 1.5px solid rgba(36, 26, 50, 0.14);
+  background: var(--color-card);
+  border: 1.5px solid var(--hairline-strong);
   border-radius: var(--radius-field);
   padding: 0.7rem 0.95rem;
   font-size: 1rem;
@@ -149,9 +618,12 @@ body {
   outline: none;
   transition: border-color 180ms var(--ease-snappy), box-shadow 180ms var(--ease-snappy);
 }
+.field::placeholder {
+  color: var(--color-ink-faint);
+}
 .field:focus {
   border-color: var(--color-tangerine);
-  box-shadow: 0 0 0 4px rgba(255, 92, 56, 0.14);
+  box-shadow: 0 0 0 4px rgba(204, 23, 87, 0.14), 0 0 24px rgba(204, 23, 87, 0.1);
 }
 
 .pill {
@@ -162,6 +634,45 @@ body {
   padding: 0.25rem 0.75rem;
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+/* glass chip that sits on poster art — always light text, art is always dark */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(8, 8, 13, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 242, 236, 0.16);
+  color: #f4f2ec;
+}
+.chip--hot {
+  background: var(--color-tangerine);
+  border-color: transparent;
+  color: white;
+  box-shadow: 0 4px 18px rgba(204, 23, 87, 0.45);
+}
+
+/* seats-left meter with a hot glow */
+.meter-track {
+  height: 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-ink) 12%, transparent);
+  overflow: hidden;
+}
+.meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-tangerine), var(--color-raspberry));
+  box-shadow: 0 0 12px rgba(204, 23, 87, 0.5);
 }
 
 /* the address-reveal "wax seal" moment */
@@ -209,4 +720,34 @@ body {
 }
 .slide-in {
   animation: slide-in 700ms var(--ease-snappy) both;
+}
+
+/* dress-code marquee riding a poster */
+.marquee {
+  overflow: hidden;
+}
+.marquee > div {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  animation: marquee-slide 18s linear infinite;
+}
+@keyframes marquee-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee > div { animation: none; }
+  .kicker::before { animation: none; }
+  .sparkle { animation: none; }
+  .btn-primary { animation: none; }
+  .reel__beam, .reel__dust, .reel__sprockets, .reel__blob, .reel__floor { animation: none; }
+  .word-cycle__word { animation: none; }
 }
